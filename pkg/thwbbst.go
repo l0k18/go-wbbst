@@ -4,9 +4,9 @@ package wbbst
 // Wbbst - Top Heavy Weight Balanced Binary Search Tree
 // Tree is encoded by an array with uint32 indices. Data type is unspecified and defined by the implementation.
 type Wbbst interface {
-	// Comparator functions
-	IsLeft(interface{}) bool
-	IsRight(interface{}) bool
+	// Comparator functions. Name indicates truth value from first argument to the second (IsLeft is true if first arg is left of second)
+	IsLeft(interface{}, interface{}) bool
+	IsRight(interface{}, interface{}) bool
 	// Returns the index location of a piece of data or an error if not found
 	Find(interface{}) (uint32, error)
 	// Insert a new node in the tree and balance if necessary. Returns position of insertion.
