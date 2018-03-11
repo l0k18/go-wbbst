@@ -46,24 +46,76 @@ Because this implements a Weight Balanced Binary Search Tree, for any insert ope
 
 The changes required can be determined before allocating a subsequent row to the dynamic array slices, as we know from a comparison to the root 0 data if we are going to the left or right, the rotation moves a new lesser child from two rows up to the same side of the parent as it is a child of its parent, the displaced object moves to become the same side child of this new parent.
 
-Here is an example:
+Here is an example of a double rotation:
 
-|     |     |     |     |     |     |     |     |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 10  |     |     |     |     |     |     |     |
-| 12  | 8   |     |     |     |     |     |     |
-| 14  | 11  |     | 4   |     |     |     |     |
-| 16  |     |     |     |     |     | 7   | 2   |
+```
+                           8
+               12                      4
+        14           11          7            2
+    16      --    --    --   --     --    --     --
+```
 
-This is an imbalanced tree. 8 does not have a left node. To balance it, 7 replaces 8, and 8 goes in beside the 4 as the left of 8
+We want to add the number 10 to this structure. Starting from the root we go left, hit 12, so we go right, and we hit 11, so we go right and find an empty slot.
 
-|     |       |       |     |     |     |     |     |
-| --- | ----- | ----- | --- | --- | --- | --- | --- |
-| 10  |       |       |     |     |     |     |     |
-| 12  | **7** |       |     |     |     |     |     |
-| 14  | 11    | **8** | 4   |     |     |     |     |
-| 16  |       |       |     |     |     |     | 2   |
+```
+                           8
+               12                      4
+        14           11          7            2
+    16      --   --      10  --     --    --     --
+```
 
-You can quickly determine the tree is imbalanced in the first example because of the empty space between 11 and 4, and the 7 and 2 on the right side, which are children of 4, whereas 8 only has 4 as a child.
+However, now we have two 3 step paths to the left, and none to the right. A weight balanced tree would have one such on each side.
 
-The objective a Weight Balanced tree is to produce the minimum number of steps between the root and any other node in the tree. The top example has three paths that require 3 hops, whereas the second one has only two.
+Thus we must recenter on the lowest value from the left side, our new 10. The 10 moves up, and pushes the 8 to its right, and then we have another imbalanced tree:
+
+```
+                           10
+               12                      8
+        14           11          --           4
+    16      --   --      --  --      --   7       2
+```
+
+Now it's even worse, we have three three step paths, though it is balanced to the left. For this reason I also considered to call this algorithm 'Top Heavy Weight Balanced Binary Search Tree', and this is why this insert required two rotations.
+
+To balance this, we need to rotate the 7 up to the position of the 8, the 8 goes to the left of the 7:
+
+```
+                           10
+               12                       7
+        14           11           8           4
+    16      --   --      --    --   --     --    2
+```
+
+Now the tree is balanced, and we have two 3 step paths, on each side, and every other slot in the rows is only 2 step paths, and every spot is filled.
+
+Now, instead of even putting the 10 in and doing all of these rotations, we can determine straight away that as soon as we saw the 8 at the root, and we travelled left to insert the 10, we know because there was already 4 nodes left and 3 nodes right, that we have to perform a rotation. Rotations that shift the root node are by necessity double rotations because of that hole that appears in the first step.
+
+So the algorithm instead then knows we have to recenter on the 10, as it is to the right of the rightmost left leaf, that then the 8 moves to the right of the root, but we know because the left-most leaf of the right hand side is to the right of 8, that we should put the 8 to the left of next right-most, the 7 instead, becomes the right of the root, and the 4 also had to shift down to the right, and the 2 down to the right of it.
+
+If the new node goes to the side already heavier than the right, then we know the root has to move right, and all other right-children have to also shift to the right. The transformation is recursive.
+
+The big benefit of using this bifurcating linear array with doubling length substrings means that when this rotation has to occur we know we have to recenter immediately from the first comparison. We know that the right hand edge of the tree must shift to the right (and thus down) one layer, and in doing this, the old right of the root must go to the left of the top node we shifted right.
+
+To perform this most simply, we then follow the right hand edge down until we hit an empty row, copy the parent into the leaf, then move up, copy the parent, until the next is the root, we place our new root into the root, and we move the old root to the left of the old root.
+
+## Memory Architecture Considerations - Why this will be faster
+
+Of course in a very large tree, this operation could span perhaps even many scores of rows cascading downwards. Golang only has 32 bit array indices, so if our data was 64 bits, this array could get no deeper, if every value did not repeat, than 32.
+
+However, compared to a conventional binary tree, with 32 bit indices (or pointers) from each node, then we have 20 bytes to store just one node. This would mean 72 gigabytes of storage for this theoretical comprehensive tree.
+
+With this structure instead we are looking at merely 16gb of storage, with a small overhead for tracking left right balance and the depth of the tree.
+
+Furthermore, you have to consider the way that the CPU will cache the data. With a conventional 4 part data structure and bidirectional references on each node, 20 bytes have to be loaded into the CPU cache to examine it. 20 bytes is equal to 5 nodes with Top-Heavy WBBST.
+
+If you consider a typical mid-range CPU of current vintage, around 6Mb of cache, if the CPU was doing nothing else, it could store 786,232 nodes.
+
+This would mean 16 full rows starting from the root, and it would use about 2/3 of the available storage, so this search structure could stay largely in cache during these rotation operations, and then the altered data would be written back to memory in a string of big dumps. This means this algorithm will tend mostly towards a large amount of linear memory transfers, in comparison to the amount of tree structure we can examine.
+
+## What inspired go-wbbst?
+
+This extreme imbalance will be fully a ratio of 1:4 for a hash table of 32 bit long hashes. This was the payload that I was considering when I came up with this algorithm, and I didn't want to implement the search in such an inefficient way, I wanted the solver this is part of, to be very hard to optimise in any way to improve performance. CPUs are way bottlenecked for memory access compared to GPUs, but their on-die caches are massively bigger, and way faster than any kind of GPU memory.
+
+This search data structure will naturally shift the balance back to the CPU as being faster at dealing with an Extreme-Memory-Hard Proof of Work, because of its cache, and more than doubly so in the case of the Ryzen 7 CPU with 20Mb of onboard cache. Similar to the Cryptonight algorithm, except not limited to merely 2gb per thread for performing fast hashes in on-die cache, this will benefit from as much cache as you can throw at it, further reducing random access of memory and thus skipping past the far greater retrieval latency of DDR4 memory compared to GDDR5X, which will then be bottlenecked by its lower latency, where the CPU can handle large chunks of this tree structure without having to make nonlinear requests from memory.
+
+Beyond the immediate problem this data structure is intended to solve, this binary tree search library can also massively accelerate a database index, hence why I have written it into a library with a generalised untyped array interface so it can be adapted to work with any readily sortable hash table search.
