@@ -20,6 +20,30 @@ This is mainly applicable to the case of storing an index in a form that can be 
 
 The application that it was dreamed up for consisted of progressively generating hashes, splitting them, and searching for half collisions. However, this can be generalised to allow the storage of any type of data that can be easily evaluated as greater than or less than. Or in other words, it is a fast index algorithm that can be used for data that is searched atomically. Input could be hashed, and then extremely rapidly the tree can be walked to look for a match, or a place to slot the hash in, when growing the index, and less quickly, deleted from the tree. It is really most applicable to a search index that will live largely in memory, and with on-die CPU caches over 4mb, they will live largely in cache and thus give the extra advantage of the extreme low latency and high throughput of this memory.
 
+## Tree Walk Functions
+
+Instead of using references or pointers, the array indices themselves, when used in the correct formula, provide the correct index for the desired walk. As you will see below, if implemented in Assembly Language the up-walk takes 4 instructions, and the left/right walks only require two instructions.
+
+They do need to be prefixed by a test. For up, if the index is zero, you can't go up from there. For left and right, the depth of the array - 2 to the power of the number of rows, is the limit. Thus in fact the up walk takes 5 instructions and the left/right walks take 4 (bitshift, conditional branch, bitshift, addition)
+
+i = index of array element
+
+Walk Up (go to parent):
+
+`i>>1-(i+1)%2`
+
+(Obviously you probably need to test if i is zero)
+
+Walk Left (down and left):
+
+`i<<1+2`
+
+(this and the next would also need to test against 2^depth of the structure, so it doesn't walk off the edge and fall back to the root)
+
+Walk Right (down and right):
+
+`i<<1+1`
+
 ## Data Structure
 
 The data structure consists of an array, implemented in Golang as a dynamic slice array, and each row exists in progressively doubling numbers of indices of the array. Thus row 1 has only index zero, row two has 1, 2, row 3 has 4, 5, 6, 7, row 4 has 8, 9, 10, 11, 12, 13, 14, 15 and so on.
