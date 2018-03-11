@@ -75,7 +75,7 @@ Thus we must recenter on the lowest value from the left side, our new 10. The 10
     16      --   --      --  --      --   7       2
 ```
 
-Now it's even worse, we have three three step paths, though it is balanced to the left. For this reason I also considered to call this algorithm 'Top Heavy Weight Balanced Binary Search Tree', and this is why this insert required two rotations.
+Now it's even worse, we have three three step paths, though it is balanced left to right. For this reason I also considered to call this algorithm 'Top Heavy Weight Balanced Binary Search Tree', and this is why this insert required two rotations.
 
 To balance this, we need to rotate the 7 up to the position of the 8, the 8 goes to the left of the 7:
 
