@@ -62,7 +62,7 @@ Visually, it looks like this, obviously it is not practical to illustrate it wit
 
 The left and right of 1 is 3, 4, the left and right of 13 is 27, 28, the left and right of 10. You can find the position of left and right by doubling the number and adding 1 for left or 2 for right.
 
-So the right of 4 is 2\*4+2=10, the left of 5 is 2\*5+1=11. Since doubling and halving can be performed entirely with bitshifting, finding which index to make a walk is 1 left rotation and 1 addition, or walking the other way, a subtraction or addition and right rotation, depending on whether the number is even or odd (this can be discovered also by a simple bitwise AND operation with 1).
+So the right of 4 is 2\*4+2=10, the left of 5 is 2\*5+1=11. Since doubling and halving can be performed entirely with bitshifting, finding which index to make a walk is 1 left rotation and 1 addition, or walking the other way, a subtraction or addition and right rotation, depending on whether the number is even or odd (this can be discovered also by a simple bitwise AND operation with 1). Or, as I have specified in the foregoing, using an addition to the index and a modulus.
 
 ## Tree Rotations
 
@@ -109,6 +109,8 @@ To balance this, we need to rotate the 7 up to the position of the 8, the 8 goes
         14           11           8           4
     16      --   --      --    --   --     --    2
 ```
+
+(This wing-shaped result will not always be the rule, but will happen a lot, and has a poetic symmetry considering the avian theme of my other work)
 
 Now the tree is balanced, and we have two 3 step paths, on each side, and every other slot in the rows is only 2 step paths, and every spot is filled.
 
