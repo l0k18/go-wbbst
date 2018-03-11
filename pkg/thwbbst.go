@@ -7,7 +7,9 @@ type Wbbst interface {
 	// Comparator functions
 	IsLeft(interface{}) bool
 	IsRight(interface{}) bool
-	// Insert a new node in the tree and balance if necessary
+	// Returns the index location of a piece of data or an error if not found
+	Find(interface{}) (uint32, error)
+	// Insert a new node in the tree and balance if necessary. Returns position of insertion.
 	Insert(interface{}) uint32
 	// Removes item at index and rebalances if necessary
 	DeleteByIndex(uint32)
