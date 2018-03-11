@@ -1,5 +1,5 @@
-// Package wbbst - A Top Heavy Weight Balanced Binary Search Tree for sorting small, largely random blobs of data
-package wbbst
+// Package thwbbst - A Top Heavy Weight Balanced Binary Search Tree for sorting small, largely random blobs of data
+package thwbbst
 
 import "errors"
 
