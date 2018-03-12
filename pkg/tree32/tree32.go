@@ -56,12 +56,12 @@ func (t *Tree) WalkRight(index uint32) (uint32, error) {
 	return right + 1, nil
 }
 
-// IsLeft - implements a greater than test on the data of a wbbst node
+// IsLeft - implements a greater than test of a value on a tree node
 func (t *Tree) IsLeft(object, subject uint32) bool {
-	return t.Store[object] > t.Store[subject]
+	return object > t.Store[subject]
 }
 
-// IsRight - implements a less than test on the data of a wbbst node
+// IsRight - implements a less than test of a value on a tree node
 func (t *Tree) IsRight(object, subject uint32) bool {
-	return t.Store[object] < t.Store[subject]
+	return object < t.Store[subject]
 }

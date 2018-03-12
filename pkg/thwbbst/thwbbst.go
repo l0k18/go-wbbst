@@ -3,6 +3,7 @@ package thwbbst
 
 // Wbbst - Top Heavy Weight Balanced Binary Search Tree
 // Tree is encoded by an array with uint32 indices. Data type is unspecified and defined by the implementation.
+// This interface can be implemented with any alternative type of BST implementation but this compact storage format is very well suited to scapegoat and weight balanced, and the extra data in the search data structure will be required for each implementation. See the tree32 implementation in /pkg in this repository
 type Wbbst interface {
 	// Comparator functions. Name indicates truth value from first argument to the second (IsLeft is true if first arg is left of second)
 	// These are an interface to allow implementation different data blob types. For example a 64 bit hash, but only compare the first 32.
