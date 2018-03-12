@@ -1,5 +1,5 @@
-// Package tree - Implements a Top Heavy Weight Balanced Binary Tree for 32 bit unsigned integers.
-package tree
+// Package tree32 - Implements a Top Heavy Weight Balanced Binary Tree for 32 bit unsigned integers.
+package tree32
 
 import "errors"
 
