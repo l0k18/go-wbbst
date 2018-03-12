@@ -19,14 +19,14 @@ func NewTree() Tree {
 }
 
 // AddRow - adds a new row to the tree
-func (t Tree) AddRow() error {
-	t.Depth++
+func (t *Tree) AddRow() error {
 	oldLen := len(t.Store)
 	s := make([]uint32, 1<<t.Depth)
 	t.Store = append(t.Store, s...)
 	if len(t.Store) == oldLen {
 		return errors.New("Unable to add new row to tree")
 	}
+	t.Depth++
 	return nil
 }
 
@@ -57,11 +57,11 @@ func (t *Tree) WalkRight(index uint32) (uint32, error) {
 }
 
 // IsLeft - implements a greater than test on the data of a wbbst node
-func (t Tree) IsLeft(object, subject uint32) bool {
+func (t *Tree) IsLeft(object, subject uint32) bool {
 	return t.Store[object] > t.Store[subject]
 }
 
 // IsRight - implements a less than test on the data of a wbbst node
-func (t Tree) IsRight(object, subject uint32) bool {
+func (t *Tree) IsRight(object, subject uint32) bool {
 	return t.Store[object] < t.Store[subject]
 }
