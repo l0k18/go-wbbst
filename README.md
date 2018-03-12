@@ -2,18 +2,15 @@
 
 A golang implementation of the Weight Balanced Binary Search tree implemented without vectors.
 
-<!-- TOC -->
+## Contents
 
-* [go-wbbst](#go-wbbst)
-  * [How to use go-wbbst](#how-to-use-go-wbbst)
-  * [General Description of Algorithm](#general-description-of-algorithm)
-  * [Tree Walk Functions](#tree-walk-functions)
-  * [Data Structure](#data-structure)
-  * [Tree Rotations](#tree-rotations)
-  * [Memory Architecture Considerations - Why this will be faster](#memory-architecture-considerations---why-this-will-be-faster)
-  * [What inspired go-wbbst?](#what-inspired-go-wbbst)
-
-<!-- /TOC -->
+* [How to use go-wbbst](#how-to-use-go-wbbst)
+* [General Description of Algorithm](#general-description-of-algorithm)
+* [Tree Walk Functions](#tree-walk-functions)
+* [Data Structure](#data-structure)
+* [Tree Rotations](#tree-rotations)
+* [Memory Architecture Considerations - Why this will be faster](#memory-architecture-considerations---why-this-will-be-faster)
+* [What inspired go-wbbst?](#what-inspired-go-wbbst)
 
 ## How to use go-wbbst
 
