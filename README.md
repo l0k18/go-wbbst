@@ -2,6 +2,25 @@
 
 A golang implementation of the Weight Balanced Binary Search tree implemented without vectors.
 
+<!-- TOC -->
+
+* [go-wbbst](#go-wbbst)
+  * [How to use go-wbbst](#how-to-use-go-wbbst)
+  * [General Description of Algorithm](#general-description-of-algorithm)
+  * [Tree Walk Functions](#tree-walk-functions)
+  * [Data Structure](#data-structure)
+  * [Tree Rotations](#tree-rotations)
+  * [Memory Architecture Considerations - Why this will be faster](#memory-architecture-considerations---why-this-will-be-faster)
+  * [What inspired go-wbbst?](#what-inspired-go-wbbst)
+
+<!-- /TOC -->
+
+## How to use go-wbbst
+
+This library only provides the walk functions and a skeleton data structure that you will want your functions to use.
+
+In order to use it you must write your implementation of comparators, search, insert and delete functions (depending on what your application requires).
+
 ## General Description of Algorithm
 
 Binary Search Trees are usually implemented using a 4 part data structure, and as such they generally use around 4 times as much memory as would be required for a data payload the size of the pointers used in them. There is the parent, the left and the right link, and then the data itself.
