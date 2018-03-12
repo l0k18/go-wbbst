@@ -16,7 +16,9 @@ A golang implementation of the Weight Balanced Binary Search tree implemented wi
 
 This library only provides the walk functions and a skeleton data structure that you will want your functions to use.
 
-In order to use it you must write your implementation of comparators, search, insert and delete functions (depending on what your application requires).
+In order to use it you must write your implementation of walkers, comparators, search, insert and delete functions (depending on what your application requires).
+
+To get you going, in [pkg/tree/tree.go](pkg/tree/tree.go) is an implementation using plain unsigned 32 bit integers implementing all functions (this is the primary type used in [Hummingbird Proof of Work](https://github.com/l0k1verloren/hummingbird)). You will also find at that repository an allocator type that lets you track an implementation of this WBBST that implements deletion (the allocator tracks which nodes in the array are recognised as being part of the search tree, and zeroes them as the sentinel to simplify tree walking)
 
 ## General Description of Algorithm
 

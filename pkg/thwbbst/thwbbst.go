@@ -1,8 +1,6 @@
 // Package thwbbst - A Top Heavy Weight Balanced Binary Search Tree for sorting small, largely random blobs of data
 package thwbbst
 
-import "errors"
-
 // Wbbst - Top Heavy Weight Balanced Binary Search Tree
 // Tree is encoded by an array with uint32 indices. Data type is unspecified and defined by the implementation.
 type Wbbst interface {
@@ -27,48 +25,4 @@ type Wbbst interface {
 	WalkUp(uint32) (uint32, error)
 	WalkLeft(uint32) (uint32, error)
 	WalkRight(uint32) (uint32, error)
-}
-
-// Tree - a generic structure for storing a short data type for the search tree
-type Tree struct {
-	Weight [2]uint32
-	Depth  uint8
-	// The store is tree structured only by the inherent structure of the tree (it is just rows of progressively doubling strings)
-	Store []interface{}
-}
-
-// AddRow - add a new row to the bottom of the tree
-func (t *Tree) AddRow() error {
-	if 1<<t.Depth == 0 {
-		return errors.New("Tree is already at maximum depth of 31")
-	}
-	t.Store = append(t.Store, make([]interface{}, 1<<t.Depth))
-	t.Depth++
-	return nil
-}
-
-// WalkUp - return the correct index from the Store that corresponds to the Parent of the index argument
-func (t *Tree) WalkUp(index uint32) (uint32, error) {
-	if index == 0 {
-		return 0, errors.New("Cannot walk up from the root")
-	}
-	return index>>1 - (index+1)%2, nil
-}
-
-// WalkLeft - Return the index from the Store that corresponds to the Left value in the next row down
-func (t *Tree) WalkLeft(index uint32) (uint32, error) {
-	left := index << 1
-	if left > 1<<t.Depth {
-		return 0, errors.New("Cannot walk below the bottom of the tree")
-	}
-	return left + 2, nil
-}
-
-// WalkRight - Return the index from the Store that corresponds to the Right value in the next row down
-func (t *Tree) WalkRight(index uint32) (uint32, error) {
-	right := index << 1
-	if right > 1<<t.Depth {
-		return 0, errors.New("Cannot walk below the bottom of the tree")
-	}
-	return right + 2, nil
 }
